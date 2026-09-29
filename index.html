@@ -1,0 +1,1673 @@
+```html
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#FF4D6D">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+
+    <title>Un message tout doux pour toi Précieuse ❤️</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Great+Vibes&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        roseGold: '#B76E79',
+                        softPink: '#FFF0F3',
+                        deepRose: '#FF4D6D',
+                        darkRose: '#C9184A',
+                        cream: '#FFF9F5',
+                        goldAccent: '#D4AF37',
+                    },
+                    fontFamily: {
+                        handwriting: ['"Dancing Script"', 'cursive'],
+                        calligraphy: ['"Great Vibes"', 'cursive'],
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    }
+                }
+            }
+        };
+    </script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html,
+        body {
+            min-height: 100%;
+        }
+
+        body {
+            margin: 0;
+            overflow-x: hidden;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 240, 243, 0.5);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #FF4D6D;
+            border-radius: 10px;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(100vh) scale(0.3) rotate(0deg);
+                opacity: 0;
+            }
+
+            20% {
+                opacity: 0.8;
+            }
+
+            100% {
+                transform: translateY(-10vh) scale(1.2) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .bg-heart {
+            position: absolute;
+            pointer-events: none;
+            animation: floatUp 8s linear infinite;
+            user-select: none;
+        }
+
+        .envelope-wrapper {
+            perspective: 1000px;
+            -webkit-perspective: 1000px;
+        }
+
+        .envelope {
+            position: relative;
+            transform-style: preserve-3d;
+            -webkit-transform-style: preserve-3d;
+            transition: transform 0.6s ease;
+        }
+
+        .flap {
+            transform-origin: top center;
+            -webkit-transform-origin: top center;
+
+            transition:
+                transform 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+                z-index 0.2s;
+
+            z-index: 25;
+        }
+
+        .envelope.open .flap {
+            transform: rotateX(180deg);
+            -webkit-transform: rotateX(180deg);
+            z-index: 5;
+        }
+
+        .letter-preview {
+            transition:
+                transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+                opacity 0.5s ease;
+        }
+
+        .envelope.open .letter-preview {
+            transform: translateY(-120px) scale(1.05);
+            -webkit-transform: translateY(-120px) scale(1.05);
+        }
+
+        @keyframes subtlePulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 10px 25px -5px rgba(255, 77, 109, 0.3);
+            }
+
+            50% {
+                transform: scale(1.02);
+                box-shadow: 0 20px 35px -5px rgba(255, 77, 109, 0.5);
+            }
+        }
+
+        .pulse-glow {
+            animation: subtlePulse 3s infinite ease-in-out;
+        }
+
+        @keyframes sparkleAnim {
+            0% {
+                opacity: 0;
+                transform: scale(0);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1.2);
+            }
+
+            100% {
+                opacity: 0;
+                transform: scale(0);
+            }
+        }
+
+        .sparkle-effect {
+            position: fixed;
+            pointer-events: none;
+            animation: sparkleAnim 1s ease-out forwards;
+            z-index: 9999;
+        }
+
+        /* Évite les problèmes de clic sur mobile */
+        button,
+        a {
+            touch-action: manipulation;
+        }
+
+        /* Message d'erreur silencieux */
+        .safe-hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+
+<body class="bg-gradient-to-br from-softPink via-[#FFE5EC] to-[#FFC2D1] min-h-screen font-sans text-slate-800 antialiased selection:bg-deepRose selection:text-white">
+
+    <!-- Cœurs flottants -->
+    <div id="hearts-container"
+         class="fixed inset-0 pointer-events-none overflow-hidden z-0"></div>
+
+    <main class="min-h-screen flex flex-col justify-center items-center p-4 sm:p-6 relative z-10 max-w-4xl mx-auto">
+
+        <!-- ========================= -->
+        <!-- ÉCRAN ENVELOPPE -->
+        <!-- ========================= -->
+
+        <div id="envelope-screen"
+             class="w-full max-w-md flex flex-col items-center justify-center transition-all duration-700">
+
+            <div class="text-center mb-8">
+
+                <span class="inline-block bg-white/70 backdrop-blur-md text-deepRose font-medium px-4 py-1.5 rounded-full text-xs sm:text-sm tracking-wide shadow-sm border border-rose-200/50 mb-3">
+
+                    <i class="fa-solid fa-heart text-deepRose animate-pulse mr-1.5"></i>
+
+                    Un message spécial pour toi Kaninda
+                </span>
+
+                <h1 class="text-3xl sm:text-4xl font-calligraphy text-darkRose font-bold tracking-wide">
+                    Ouvre délicatement...
+                </h1>
+
+                <p class="text-xs sm:text-sm text-slate-600 mt-1">
+                    Touche l'enveloppe pour découvrir ta surprise
+                </p>
+
+            </div>
+
+
+            <!-- ENVELOPPE -->
+
+            <div id="interactive-envelope"
+                 class="envelope-wrapper w-72 sm:w-80 h-52 sm:h-56 cursor-pointer my-4"
+                 role="button"
+                 tabindex="0"
+                 aria-label="Ouvrir l'enveloppe">
+
+                <div class="envelope w-full h-full bg-rose-100 rounded-xl relative shadow-2xl border border-rose-200/80 pulse-glow">
+
+                    <!-- Rabat -->
+                    <div class="flap absolute top-0 left-0 w-full h-0
+                        border-l-[144px] sm:border-l-[160px]
+                        border-l-transparent
+                        border-r-[144px] sm:border-r-[160px]
+                        border-r-transparent
+                        border-t-[115px] sm:border-t-[125px]
+                        border-t-rose-300 drop-shadow-md">
+                    </div>
+
+
+                    <!-- Sceau -->
+                    <div id="wax-seal"
+                         class="absolute top-[85px] sm:top-[95px] left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 w-12 h-12 bg-gradient-to-tr from-darkRose to-deepRose rounded-full flex items-center justify-center shadow-lg border-2 border-amber-200">
+
+                        <i class="fa-solid fa-heart text-amber-200 text-lg"></i>
+
+                    </div>
+
+
+                    <!-- Aperçu lettre -->
+                    <div class="absolute inset-x-2 bottom-2 top-2 bg-rose-50 rounded-lg overflow-hidden border border-rose-200">
+
+                        <div class="letter-preview absolute inset-2 bg-cream rounded shadow-sm p-4 text-center flex flex-col items-center justify-center border border-amber-100 opacity-90">
+
+                            <p class="font-handwriting text-2xl text-darkRose font-bold">
+                                Pour Mon Amour Jennifa
+                            </p>
+
+                            <p class="text-[11px] text-slate-500 mt-1">
+                                ✨ Préparé avec tout mon cœur ✨
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Corps enveloppe -->
+                    <div class="absolute bottom-0 left-0 w-full h-0
+                        border-l-[144px] sm:border-l-[160px]
+                        border-l-rose-200
+                        border-r-[144px] sm:border-r-[160px]
+                        border-r-rose-200
+                        border-b-[100px] sm:border-b-[110px]
+                        border-b-rose-200/90
+                        rounded-b-xl z-20 pointer-events-none">
+                    </div>
+
+                    <div class="absolute bottom-0 left-0 w-full h-0
+                        border-l-[144px] sm:border-l-[160px]
+                        border-l-transparent
+                        border-r-[144px] sm:border-r-[160px]
+                        border-r-transparent
+                        border-b-[90px] sm:border-b-[100px]
+                        border-b-rose-100
+                        rounded-b-xl z-20 pointer-events-none">
+                    </div>
+
+                </div>
+            </div>
+
+
+            <p class="text-xs text-rose-500 font-medium animate-bounce mt-6">
+
+                <i class="fa-solid fa-hand-pointer mr-1"></i>
+
+                Cliquez sur le sceau pour ouvrir
+
+            </p>
+
+        </div>
+
+
+        <!-- ========================= -->
+        <!-- LETTRE -->
+        <!-- ========================= -->
+
+        <div id="letter-card"
+             class="w-full max-w-xl bg-cream/95 backdrop-blur-md rounded-2xl shadow-2xl border border-rose-200/80 overflow-hidden hidden transform opacity-0 translate-y-8 transition-all duration-700 relative">
+
+
+            <!-- HEADER -->
+
+            <div class="bg-gradient-to-r from-roseGold via-deepRose to-darkRose p-4 sm:p-5 text-white text-center relative overflow-hidden">
+
+                <div class="absolute -right-4 -top-4 opacity-20 text-6xl">
+                    <i class="fa-solid fa-heart"></i>
+                </div>
+
+                <div class="absolute -left-4 -bottom-4 opacity-20 text-6xl">
+                    <i class="fa-solid fa-heart"></i>
+                </div>
+
+                <h2 class="font-calligraphy text-3xl sm:text-4xl tracking-wider">
+                    Douces Pensées pour Toi Précieuse
+                </h2>
+
+                <p class="text-xs text-rose-100 mt-0.5 font-light">
+                    Chaque jour à tes côtés est un cadeau ✨
+                </p>
+
+            </div>
+
+
+            <!-- CONTENU -->
+
+            <div class="p-5 sm:p-8 space-y-6">
+
+
+                <!-- MESSAGE -->
+
+                <div class="min-h-[180px] sm:min-h-[200px] bg-white/80 rounded-xl p-5 border border-rose-100 shadow-inner flex flex-col justify-between relative">
+
+                    <div class="absolute top-3 right-3 text-rose-200">
+                        <i class="fa-solid fa-quote-right text-2xl"></i>
+                    </div>
+
+
+                    <div class="text-[10px] uppercase font-semibold text-roseGold tracking-widest mb-2 flex items-center gap-1.5">
+
+                        <span class="w-2 h-2 rounded-full bg-deepRose inline-block animate-ping"></span>
+
+                        Message
+
+                        <span id="note-counter">
+                            1 / 4
+                        </span>
+
+                    </div>
+
+
+                    <div class="py-2">
+
+                        <p id="note-text"
+                           class="font-handwriting text-2xl sm:text-3xl text-slate-800 leading-relaxed sm:leading-loose">
+                        </p>
+
+                    </div>
+
+
+                    <div class="text-right pt-2 border-t border-rose-50">
+
+                        <span class="font-calligraphy text-2xl text-darkRose">
+                            Avec tout mon amour ❤️
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- NAVIGATION -->
+
+                <div class="flex items-center justify-between gap-3">
+
+                    <button id="prev-btn"
+                            type="button"
+                            class="px-4 py-2 bg-rose-100 hover:bg-rose-200 text-darkRose rounded-xl font-medium text-xs sm:text-sm transition flex items-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed">
+
+                        <i class="fa-solid fa-chevron-left"></i>
+                        Précédent
+
+                    </button>
+
+
+                    <div class="flex items-center gap-1.5"
+                         id="dots-container">
+                    </div>
+
+
+                    <button id="next-btn"
+                            type="button"
+                            class="px-4 py-2 bg-gradient-to-r from-deepRose to-darkRose hover:opacity-90 text-white rounded-xl font-medium text-xs sm:text-sm transition shadow-md flex items-center gap-2">
+
+                        Suivant
+                        <i class="fa-solid fa-chevron-right"></i>
+
+                    </button>
+
+                </div>
+
+
+                <hr class="border-rose-100">
+
+
+                <!-- SURPRISES -->
+
+                <div>
+
+                    <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3 text-center">
+                        🎁 Petites Surprises Interactives
+                    </p>
+
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+
+
+                        <button type="button"
+                                data-surprise="hug"
+                                class="surprise-btn p-3 bg-white hover:bg-rose-50 border border-rose-200 rounded-xl text-center shadow-sm hover:shadow-md transition group">
+
+                            <div class="w-8 h-8 mx-auto bg-rose-100 rounded-full flex items-center justify-center text-deepRose group-hover:scale-110 transition-transform mb-1">
+
+                                <i class="fa-solid fa-hands-holding-child"></i>
+
+                            </div>
+
+                            <span class="block text-xs font-medium text-slate-700">
+                                Câlin Virtuel
+                            </span>
+
+                        </button>
+
+
+                        <button type="button"
+                                data-surprise="reasons"
+                                class="surprise-btn p-3 bg-white hover:bg-rose-50 border border-rose-200 rounded-xl text-center shadow-sm hover:shadow-md transition group">
+
+                            <div class="w-8 h-8 mx-auto bg-rose-100 rounded-full flex items-center justify-center text-deepRose group-hover:scale-110 transition-transform mb-1">
+
+                                <i class="fa-solid fa-list-check"></i>
+
+                            </div>
+
+                            <span class="block text-xs font-medium text-slate-700">
+                                Pourquoi Je T'aime
+                            </span>
+
+                        </button>
+
+
+                        <button type="button"
+                                data-surprise="music"
+                                class="surprise-btn p-3 bg-white hover:bg-rose-50 border border-rose-200 rounded-xl text-center shadow-sm hover:shadow-md transition group">
+
+                            <div class="w-8 h-8 mx-auto bg-rose-100 rounded-full flex items-center justify-center text-deepRose group-hover:scale-110 transition-transform mb-1">
+
+                                <i class="fa-solid fa-music"></i>
+
+                            </div>
+
+                            <span class="block text-xs font-medium text-slate-700">
+                                Notre Musique
+                            </span>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- FOOTER -->
+
+                <div class="pt-2 text-center flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
+
+
+                    <button id="music-toggle"
+                            type="button"
+                            class="flex items-center gap-2 text-rose-600 hover:text-darkRose font-medium bg-rose-50 px-3 py-1.5 rounded-full border border-rose-200">
+
+                        <i id="music-icon"
+                           class="fa-solid fa-compact-disc"></i>
+
+                        <span id="music-status-text">
+                            Musique douce ON
+                        </span>
+
+                    </button>
+
+
+                    <a id="whatsapp-reply"
+                       href="https://wa.me/?text=J%27ai%20ador%C3%A9%20ton%20message%20doux%20!%20%E2%9D%A4%EF%B8%8F"
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       class="text-emerald-600 hover:text-emerald-700 font-semibold flex items-center gap-1.5 bg-emerald-50 px-3 py-1.5 rounded-full border border-emerald-200">
+
+                        <i class="fa-brands fa-whatsapp text-sm"></i>
+
+                        Lui répondre sur WhatsApp
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <!-- ========================= -->
+    <!-- MODAL -->
+    <!-- ========================= -->
+
+    <div id="surprise-modal"
+         class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+
+        <div id="modal-content"
+             class="bg-white rounded-2xl max-w-sm w-full p-6 text-center shadow-2xl border border-rose-100 transform scale-90 transition-transform duration-300 relative">
+
+
+            <button id="close-modal"
+                    type="button"
+                    class="absolute top-3 right-3 text-slate-400 hover:text-slate-600 p-1">
+
+                <i class="fa-solid fa-xmark text-lg"></i>
+
+            </button>
+
+
+            <div id="modal-icon-container"
+                 class="w-16 h-16 bg-rose-100 rounded-full flex items-center justify-center text-3xl text-deepRose mx-auto mb-4">
+
+                <i class="fa-solid fa-heart"></i>
+
+            </div>
+
+
+            <h3 id="modal-title"
+                class="text-xl font-bold text-slate-800 mb-2">
+                Titre
+            </h3>
+
+
+            <div id="modal-body"
+                 class="text-sm text-slate-600 leading-relaxed mb-6">
+
+                Contenu de la surprise...
+
+            </div>
+
+
+            <button id="close-modal-bottom"
+                    type="button"
+                    class="w-full py-2.5 bg-gradient-to-r from-deepRose to-darkRose text-white rounded-xl font-medium text-sm shadow-md hover:opacity-90 transition">
+
+                Fermer avec un sourire 😊
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- ========================= -->
+    <!-- JAVASCRIPT -->
+    <!-- ========================= -->
+
+    <script>
+
+        "use strict";
+
+
+        /* =========================
+           MESSAGES
+        ========================= */
+
+        const loveNotes = [
+
+            "Juste une petite pensée pour te rappeler à quel point tu es précieuse pour moi. Tu illumines mes journées...",
+
+            "Chaque moment passé avec toi est un souvenir que je chéris. Ton sourire est ma plus belle habitude.",
+
+            "Merci d'être cette personne exceptionnelle, douce, attentionnée et tellement belle au quotidien.",
+
+            "Peu importe la distance ou le temps qui passe, mon cœur bat toujours un peu plus fort pour toi. ❤️"
+
+        ];
+
+
+        const reasonsList = [
+
+            "Ton rire contagieux qui réchauffe immédiatement ma journée.",
+
+            "La façon dont tes yeux brillent quand tu me parles de ce que tu aimes.",
+
+            "Ta gentillesse infinie et ta douceur envers moi.",
+
+            "Le simple fait d'être toi-même à mes côtés."
+
+        ];
+
+
+        /* =========================
+           VARIABLES
+        ========================= */
+
+        let currentNoteIndex = 0;
+
+        let typingTimeout = null;
+
+        let isTyping = false;
+
+        let isAudioPlaying = false;
+
+        let audioCtx = null;
+
+        let bgInterval = null;
+
+        let envelopeAlreadyOpened = false;
+
+
+        /* =========================
+           DOM
+        ========================= */
+
+        const envelopeScreen =
+            document.getElementById("envelope-screen");
+
+        const interactiveEnvelope =
+            document.getElementById("interactive-envelope");
+
+        const letterCard =
+            document.getElementById("letter-card");
+
+        const noteText =
+            document.getElementById("note-text");
+
+        const noteCounter =
+            document.getElementById("note-counter");
+
+        const prevBtn =
+            document.getElementById("prev-btn");
+
+        const nextBtn =
+            document.getElementById("next-btn");
+
+        const dotsContainer =
+            document.getElementById("dots-container");
+
+        const modal =
+            document.getElementById("surprise-modal");
+
+        const modalContent =
+            document.getElementById("modal-content");
+
+
+        /* =========================
+           COEURS
+        ========================= */
+
+        function createFloatingHearts() {
+
+            const container =
+                document.getElementById("hearts-container");
+
+            if (!container) return;
+
+            const heartIcons = [
+                "❤️",
+                "💖",
+                "💕",
+                "💗",
+                "✨",
+                "🌸"
+            ];
+
+            for (let i = 0; i < 20; i++) {
+
+                const heart =
+                    document.createElement("div");
+
+                heart.className = "bg-heart";
+
+                heart.innerText =
+                    heartIcons[
+                        Math.floor(
+                            Math.random() *
+                            heartIcons.length
+                        )
+                    ];
+
+                heart.style.left =
+                    Math.random() * 100 + "vw";
+
+                heart.style.animationDuration =
+                    6 + Math.random() * 6 + "s";
+
+                heart.style.animationDelay =
+                    Math.random() * 5 + "s";
+
+                heart.style.fontSize =
+                    14 + Math.random() * 18 + "px";
+
+                container.appendChild(heart);
+            }
+        }
+
+
+        /* =========================
+           PETITES ÉTOILES
+        ========================= */
+
+        document.addEventListener("click", function(e) {
+
+            /*
+             * Ne crée pas d'étoile si le clic
+             * est sur un bouton de navigation.
+             */
+
+            const target =
+                e.target.closest("button, a");
+
+            if (target) return;
+
+            const sparkle =
+                document.createElement("div");
+
+            sparkle.className =
+                "sparkle-effect text-rose-500 font-bold";
+
+            sparkle.innerText = "✨";
+
+            sparkle.style.left =
+                (e.clientX - 10) + "px";
+
+            sparkle.style.top =
+                (e.clientY - 10) + "px";
+
+            document.body.appendChild(sparkle);
+
+            setTimeout(function() {
+
+                sparkle.remove();
+
+            }, 1000);
+
+        });
+
+
+        /* =========================
+           CONFETTIS SÉCURISÉS
+        ========================= */
+
+        function launchConfetti(options) {
+
+            try {
+
+                if (typeof window.confetti === "function") {
+
+                    window.confetti(options);
+
+                }
+
+            } catch (error) {
+
+                console.log(
+                    "Confettis indisponibles."
+                );
+
+            }
+
+        }
+
+
+        /* =========================
+           OUVERTURE ENVELOPPE
+        ========================= */
+
+        function openEnvelope() {
+
+            /*
+             * Empêche plusieurs clics rapides
+             * de lancer plusieurs animations.
+             */
+
+            if (envelopeAlreadyOpened) return;
+
+            envelopeAlreadyOpened = true;
+
+
+            const envelope =
+                interactiveEnvelope.querySelector(".envelope");
+
+
+            if (!envelope) {
+
+                envelopeAlreadyOpened = false;
+
+                return;
+
+            }
+
+
+            envelope.classList.add("open");
+
+
+            /* Confettis */
+
+            launchConfetti({
+
+                particleCount: 50,
+
+                spread: 60,
+
+                origin: {
+                    y: 0.6
+                },
+
+                colors: [
+                    "#FF4D6D",
+                    "#FF8FA3",
+                    "#FFF0F3",
+                    "#D4AF37"
+                ]
+
+            });
+
+
+            /*
+             * La musique est optionnelle.
+             * Si elle est bloquée par le téléphone,
+             * le reste du site continue normalement.
+             */
+
+            try {
+
+                initSoftMusic();
+
+            } catch (error) {
+
+                console.log(
+                    "Musique non disponible."
+                );
+
+            }
+
+
+            /* Transition */
+
+            setTimeout(function() {
+
+                envelopeScreen.classList.add(
+                    "opacity-0",
+                    "-translate-y-10"
+                );
+
+
+                setTimeout(function() {
+
+                    envelopeScreen.classList.add(
+                        "hidden"
+                    );
+
+                    letterCard.classList.remove(
+                        "hidden"
+                    );
+
+
+                    requestAnimationFrame(function() {
+
+                        letterCard.classList.remove(
+                            "opacity-0",
+                            "translate-y-8"
+                        );
+
+                        letterCard.classList.add(
+                            "opacity-100",
+                            "translate-y-0"
+                        );
+
+
+                        initPaginationDots();
+
+                        displayNote(0);
+
+                    });
+
+                }, 500);
+
+            }, 1200);
+
+        }
+
+
+        /* =========================
+           CLIC ENVELOPPE
+        ========================= */
+
+        interactiveEnvelope.addEventListener(
+            "click",
+            openEnvelope
+        );
+
+
+        /*
+         * Support clavier
+         */
+
+        interactiveEnvelope.addEventListener(
+            "keydown",
+            function(e) {
+
+                if (
+                    e.key === "Enter" ||
+                    e.key === " "
+                ) {
+
+                    e.preventDefault();
+
+                    openEnvelope();
+
+                }
+
+            }
+        );
+
+
+        /* =========================
+           MACHINE À ÉCRIRE
+        ========================= */
+
+        function typeWriter(text, i = 0) {
+
+            clearTimeout(typingTimeout);
+
+            if (i === 0) {
+
+                noteText.textContent = "";
+
+                isTyping = true;
+
+            }
+
+
+            if (i < text.length) {
+
+                noteText.textContent +=
+                    text.charAt(i);
+
+
+                typingTimeout =
+                    setTimeout(
+                        function() {
+
+                            typeWriter(
+                                text,
+                                i + 1
+                            );
+
+                        },
+                        35
+                    );
+
+            } else {
+
+                isTyping = false;
+
+            }
+
+        }
+
+
+        /* =========================
+           AFFICHAGE MESSAGE
+        ========================= */
+
+        function displayNote(index) {
+
+            clearTimeout(typingTimeout);
+
+            if (
+                index < 0 ||
+                index >= loveNotes.length
+            ) {
+
+                return;
+
+            }
+
+
+            currentNoteIndex = index;
+
+
+            noteCounter.innerText =
+                `${index + 1} / ${loveNotes.length}`;
+
+
+            typeWriter(
+                loveNotes[index]
+            );
+
+
+            prevBtn.disabled =
+                index === 0;
+
+
+            if (
+                index === loveNotes.length - 1
+            ) {
+
+                nextBtn.innerHTML =
+                    'Relire ❤️ <i class="fa-solid fa-rotate-right ml-1"></i>';
+
+            } else {
+
+                nextBtn.innerHTML =
+                    'Suivant <i class="fa-solid fa-chevron-right ml-1"></i>';
+
+            }
+
+
+            updateDots();
+
+        }
+
+
+        /* =========================
+           DOTS
+        ========================= */
+
+        function initPaginationDots() {
+
+            dotsContainer.innerHTML = "";
+
+
+            loveNotes.forEach(
+                function(_, idx) {
+
+                    const dot =
+                        document.createElement("button");
+
+                    dot.type = "button";
+
+                    dot.setAttribute(
+                        "aria-label",
+                        `Message ${idx + 1}`
+                    );
+
+                    dot.className =
+                        idx === 0
+                            ? "w-5 h-2 rounded-full bg-deepRose transition-all duration-300"
+                            : "w-2 h-2 rounded-full bg-rose-200 transition-all duration-300";
+
+
+                    dot.addEventListener(
+                        "click",
+                        function() {
+
+                            displayNote(idx);
+
+                        }
+                    );
+
+
+                    dotsContainer.appendChild(dot);
+
+                }
+            );
+
+        }
+
+
+        function updateDots() {
+
+            Array.from(
+                dotsContainer.children
+            ).forEach(
+                function(dot, idx) {
+
+                    if (
+                        idx === currentNoteIndex
+                    ) {
+
+                        dot.className =
+                            "w-5 h-2 rounded-full bg-deepRose transition-all duration-300";
+
+                    } else {
+
+                        dot.className =
+                            "w-2 h-2 rounded-full bg-rose-200 transition-all duration-300";
+
+                    }
+
+                }
+            );
+
+        }
+
+
+        /* =========================
+           NAVIGATION
+        ========================= */
+
+        prevBtn.addEventListener(
+            "click",
+            function() {
+
+                if (
+                    currentNoteIndex > 0
+                ) {
+
+                    displayNote(
+                        currentNoteIndex - 1
+                    );
+
+                }
+
+            }
+        );
+
+
+        nextBtn.addEventListener(
+            "click",
+            function() {
+
+                if (
+                    currentNoteIndex <
+                    loveNotes.length - 1
+                ) {
+
+                    displayNote(
+                        currentNoteIndex + 1
+                    );
+
+                } else {
+
+                    displayNote(0);
+
+                }
+
+            }
+        );
+
+
+        /* =========================
+           SURPRISES
+        ========================= */
+
+        function triggerSurprise(type) {
+
+            const iconContainer =
+                document.getElementById(
+                    "modal-icon-container"
+                );
+
+            const title =
+                document.getElementById(
+                    "modal-title"
+                );
+
+            const body =
+                document.getElementById(
+                    "modal-body"
+                );
+
+
+            if (!iconContainer ||
+                !title ||
+                !body ||
+                !modal ||
+                !modalContent) {
+
+                return;
+
+            }
+
+
+            if (type === "hug") {
+
+                iconContainer.innerHTML =
+                    '<i class="fa-solid fa-heart-pulse text-deepRose animate-bounce"></i>';
+
+                title.innerText =
+                    "Un Gros Câlin Virtuel ! 🫂";
+
+                body.innerText =
+                    "Ferme les yeux pendant 3 secondes... Imagine-toi mes bras autour de toi. Je t'envoie tout mon amour et toute ma chaleur à cet instant précis ! ❤️";
+
+
+                launchConfetti({
+
+                    particleCount: 40,
+
+                    spread: 70,
+
+                    origin: {
+                        y: 0.5
+                    },
+
+                    colors: [
+                        "#FF4D6D",
+                        "#FF1744"
+                    ]
+
+                });
+
+            }
+
+
+            else if (type === "reasons") {
+
+                iconContainer.innerHTML =
+                    '<i class="fa-solid fa-list-ol text-deepRose"></i>';
+
+                title.innerText =
+                    "Pourquoi Je T'aime... 💖";
+
+
+                body.innerHTML = "";
+
+
+                const list =
+                    document.createElement("ul");
+
+                list.className =
+                    "text-left space-y-2 mt-2";
+
+
+                reasonsList.forEach(
+                    function(reason) {
+
+                        const li =
+                            document.createElement("li");
+
+                        li.className =
+                            "flex items-start gap-2";
+
+
+                        li.innerHTML =
+                            '<i class="fa-solid fa-check text-deepRose mt-1 text-xs"></i>';
+
+
+                        const span =
+                            document.createElement("span");
+
+                        span.textContent =
+                            reason;
+
+
+                        li.appendChild(span);
+
+                        list.appendChild(li);
+
+                    }
+                );
+
+
+                body.appendChild(list);
+
+            }
+
+
+            else if (type === "music") {
+
+                iconContainer.innerHTML =
+                    '<i class="fa-solid fa-music text-deepRose animate-spin"></i>';
+
+                title.innerText =
+                    "Une Pensée en Musique 🎵";
+
+                body.innerText =
+                    "Chaque note de cette douce mélodie me fait penser à la douceur de tes gestes et à la tranquillité que tu m'apportes.";
+
+            }
+
+
+            modal.classList.remove(
+                "pointer-events-none",
+                "opacity-0"
+            );
+
+
+            modalContent.classList.remove(
+                "scale-90"
+            );
+
+
+            modalContent.classList.add(
+                "scale-100"
+            );
+
+        }
+
+
+        /* =========================
+           FERMER MODAL
+        ========================= */
+
+        function closeModal() {
+
+            if (!modal || !modalContent)
+                return;
+
+
+            modal.classList.add(
+                "opacity-0",
+                "pointer-events-none"
+            );
+
+
+            modalContent.classList.remove(
+                "scale-100"
+            );
+
+
+            modalContent.classList.add(
+                "scale-90"
+            );
+
+        }
+
+
+        document
+            .getElementById("close-modal")
+            .addEventListener(
+                "click",
+                closeModal
+            );
+
+
+        document
+            .getElementById("close-modal-bottom")
+            .addEventListener(
+                "click",
+                closeModal
+            );
+
+
+        /* =========================
+           BOUTONS SURPRISES
+        ========================= */
+
+        document
+            .querySelectorAll(".surprise-btn")
+            .forEach(
+                function(button) {
+
+                    button.addEventListener(
+                        "click",
+                        function() {
+
+                            const type =
+                                button.dataset.surprise;
+
+                            triggerSurprise(type);
+
+                        }
+                    );
+
+                }
+            );
+
+
+        /* =========================
+           MUSIQUE
+        ========================= */
+
+        function initSoftMusic() {
+
+            try {
+
+                const AudioContext =
+                    window.AudioContext ||
+                    window.webkitAudioContext;
+
+
+                if (!AudioContext) {
+
+                    isAudioPlaying = false;
+
+                    return;
+
+                }
+
+
+                /*
+                 * Si le contexte existe déjà,
+                 * on ne le recrée pas.
+                 */
+
+                if (audioCtx) {
+
+                    if (
+                        audioCtx.state === "suspended"
+                    ) {
+
+                        audioCtx.resume().catch(
+                            function() {}
+                        );
+
+                    }
+
+                    isAudioPlaying = true;
+
+                    return;
+
+                }
+
+
+                audioCtx =
+                    new AudioContext();
+
+
+                isAudioPlaying = true;
+
+
+                const notes = [
+                    261.63,
+                    329.63,
+                    392.00,
+                    523.25,
+                    659.25
+                ];
+
+
+                let noteIndex = 0;
+
+
+                bgInterval =
+                    setInterval(
+                        function() {
+
+                            if (
+                                !isAudioPlaying ||
+                                !audioCtx
+                            ) {
+
+                                return;
+
+                            }
+
+
+                            try {
+
+                                const osc =
+                                    audioCtx.createOscillator();
+
+                                const gain =
+                                    audioCtx.createGain();
+
+
+                                osc.type = "sine";
+
+
+                                osc.frequency.setValueAtTime(
+                                    notes[
+                                        noteIndex %
+                                        notes.length
+                                    ],
+                                    audioCtx.currentTime
+                                );
+
+
+                                gain.gain.setValueAtTime(
+                                    0.01,
+                                    audioCtx.currentTime
+                                );
+
+
+                                gain.gain.exponentialRampToValueAtTime(
+                                    0.08,
+                                    audioCtx.currentTime + 0.5
+                                );
+
+
+                                gain.gain.exponentialRampToValueAtTime(
+                                    0.001,
+                                    audioCtx.currentTime + 2.5
+                                );
+
+
+                                osc.connect(gain);
+
+                                gain.connect(
+                                    audioCtx.destination
+                                );
+
+
+                                osc.start();
+
+                                osc.stop(
+                                    audioCtx.currentTime + 2.6
+                                );
+
+
+                                noteIndex =
+                                    Math.floor(
+                                        Math.random() *
+                                        notes.length
+                                    );
+
+                            } catch (error) {
+
+                                console.log(
+                                    "Erreur audio ignorée."
+                                );
+
+                            }
+
+                        },
+                        1200
+                    );
+
+
+            } catch (error) {
+
+                /*
+                 * Très important :
+                 * si l'audio est bloqué,
+                 * le site continue à fonctionner.
+                 */
+
+                isAudioPlaying = false;
+
+                console.log(
+                    "Audio indisponible."
+                );
+
+            }
+
+        }
+
+
+        /* =========================
+           BOUTON MUSIQUE
+        ========================= */
+
+        document
+            .getElementById("music-toggle")
+            .addEventListener(
+                "click",
+                toggleAudio
+            );
+
+
+        function toggleAudio() {
+
+            const musicStatusText =
+                document.getElementById(
+                    "music-status-text"
+                );
+
+            const icon =
+                document.getElementById(
+                    "music-icon"
+                );
+
+
+            if (isAudioPlaying) {
+
+                isAudioPlaying = false;
+
+
+                if (audioCtx) {
+
+                    try {
+
+                        audioCtx.suspend();
+
+                    } catch (error) {}
+
+                }
+
+
+                musicStatusText.innerText =
+                    "Musique PAUSE";
+
+                icon.classList.remove(
+                    "animate-spin"
+                );
+
+            } else {
+
+                isAudioPlaying = true;
+
+
+                if (audioCtx) {
+
+                    try {
+
+                        audioCtx.resume();
+
+                    } catch (error) {}
+
+                } else {
+
+                    initSoftMusic();
+
+                }
+
+
+                musicStatusText.innerText =
+                    "Musique douce ON";
+
+                icon.classList.add(
+                    "animate-spin"
+                );
+
+            }
+
+        }
+
+
+        /* =========================
+           ESC POUR FERMER MODAL
+        ========================= */
+
+        document.addEventListener(
+            "keydown",
+            function(e) {
+
+                if (e.key === "Escape") {
+
+                    closeModal();
+
+                }
+
+            }
+        );
+
+
+        /* =========================
+           INITIALISATION
+        ========================= */
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            function() {
+
+                createFloatingHearts();
+
+            }
+        );
+
+    </script>
+
+</body>
+</html>
+```
